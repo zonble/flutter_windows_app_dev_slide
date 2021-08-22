@@ -1,0 +1,393 @@
+#+TITLE: 使用 Flutter 開發 Windows 應用
+#+AUTHOR: Weizhong Yang a.k.a zonble
+#+EMAIL: zonble@gmail.com / weizhong.yang@cerence.com
+#+LANGUAGE: zh-TW
+#+REVEAL_VERSION: 3.6.0
+#+REVEAL_ROOT: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0
+#+REVEAL_THEME: white
+#+OPTIONS: toc:nil
+#+REVEAL_INIT_OPTIONS: slideNumber:false
+
+* 前言
+
+  - Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
+  - 今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗
+
+* 關於我
+
+  - Flutter GDE (2019-)
+  - 工作
+    * 工作內容大抵上是 App 工程師
+    * Engineer Manager @ Cerence Taipei (2020-)
+    * iOS Developer Lead @ KKBOX (2011-2020)
+    * 一家兩人接案公司 (2007-2011)
+
+** 我做過的東西
+  
+    * Cerence Ark Assitant SDK for iOS and Flutter
+    * KKBOX Kids for iOS and Android
+    * KKBOX for macOS, iOS, watchOS, tvOS
+    * KKBOX iOS 開發基本教材
+    * Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
+      macOS 版
+    * 還有很多失敗作品
+
+* 背景
+
+  - [[https://www.cerence.com/][Cerence (NASDAQ: CENC)]]
+  - 以語音為核心技術的 AIoT 公司
+  - Cerence 最近半年積極開發語音智慧電梯
+  - [[https://www.youtube.com/watch?v=JpnwInksmgY][Demo]]
+
+  - 智慧電梯是一個語音盒子，後面控制電梯的系統
+  - 這個盒子需要一套 PC 上的配置工具
+    * 更新韌體
+    * 編輯樓層語音指令
+    * 執行硬體測試
+  - 我們使用 Flutter 開發
+
+** Demo
+
+  #+REVEAL_HTML: <iframe width="800" height="500" src="https://www.youtube.com/embed/JpnwInksmgY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  
+* 為什麼用 Flutter？
+
+  - 客戶一開始想要 Windows + iOS 這套組合
+  - 我們也不想要寫兩套 codebase
+  - Designer 做了一整套 Material Design 的畫面
+  - 我手上會的開發框架，只有 Flutter 可以符合這個需求
+
+* 這個 App 做了哪些事？
+
+** 簡單來說
+
+  - 登入
+  - 察看設備訊息
+  - 編輯樓層語音指令
+  - 執行各項測試
+  - OTA 軟體更新
+
+** 複雜來說
+
+  - 在本地端產生 privarte/public key，並且加密保存
+  - 在本地端產生 x509 CSR 與匯入 Certificate
+  - 使用 WebView 2 執行 Oauth authenticateion code flow 登入
+  - 使用 mTLS 連線登入
+  - 偵測 USB 連接狀態，判斷是否連接設備
+  - 透過 ADB forwarding 與設備做 socket 通訊
+    * 包含檢測與 OTA
+  - 其他各種 HTTP 連線與 server 傳遞資料
+  - 用 Flutter GUI 編輯語音指令
+
+* App 的組成
+
+  - Flutter Bloc 狀態與 GUI
+  - Cerence API client
+  - Cernece OTA API client
+  - 設備 socket 通訊 client
+  - Cerence 語音通訊協定 Flutter plugin
+  - Flutter WebView2 plugin
+  - Flutter USB notification plugin
+
+* 從 Mobile 轉向 Desktop
+
+  - 今天主要要講的
+    * 善用 CLI 工具
+    * 特別注意 Undo
+    * Desktop 專屬的 GUI
+    * Installer
+  - 順便會講的
+    * Windows 上的 plug-in 開發
+    * .Net
+
+* 在準備進入 Flutter 開發 Windows App 之前
+
+  - 只會 Dart/Flutter 可能不太夠
+  - 應該還是很有可能碰到
+    - CMake 語法
+    - C/C++ 語言
+    - C/C++ 編譯設定
+    - Nuget
+    - WiX 或其他 Installer 開發工具
+  
+* 善用 CLI 工具
+
+** Mobile 上的習慣
+
+  - 我們習慣在 Mobile 上，用一個 app 做完所有事
+    * iOS 最初連把部分 code 搬到其他 framework 都不行，只能 static link
+    * 不能與其他 process 通訊，widget 只能夠透過共用檔案或 keychain 交換資訊
+    * App 之間可以透過 openURL: 通訊，但蘋果也大加限制
+    * Android 則可以讓 App 與 Service 通訊
+    * 控制其他 app 則需要透過呼叫 activity 等方式
+
+** Desktop 上的 System Call
+  
+  - Desktop 平台可以盡情呼叫 system call
+    * 執行其他的 CLI 程式
+    * 讀取 standard output 與 standard error 顯示
+
+* Process Class
+
+  - Dart 程式可以用 [[https://api.dart.dev/stable/2.13.4/dart-io/Process-class.html][Process]] 執行外部命令，呼叫方式
+
+#+BEGIN_SRC dart
+  var result = await Process.run('ls', ['-l']);
+#+END_SRC
+
+  - 從 result 中可以讀取 stdout 與 std err
+  - 在 Windows 上，往往需要設置 PATH 變數或知道命令絕對路徑才能執行
+  - 可以用 [[https://api.flutter.dev/flutter/dart-io/Platform/resolvedExecutable.html][Platform.resolvedExecutable]] 取得目前 app 執行檔位置，找到跟著一起發行
+    的執行檔
+  
+* Dart 也可以開發 CLI 工具
+
+** Compile Exe
+  
+  - 在撰寫一些跟 GUI 無關的 code 的時候，我們也可以把這部分變成 CLI 工具
+  - 支援編譯出 Windows、macOS、Linux 的執行檔
+  - 執行檔中包含一套 Dart runtime
+  - 每個執行檔大約 5mb
+  - 搭配 [[https://pub.dev/packages/args][args]] 套件處理參數
+  - 在開發桌面應用時，可以活用這個特性
+
+#+BEGIN_SRC shell
+& dart compile exe my_cli_cmd.dart
+#+END_SRC
+
+** 我們的使用場景
+
+  - Windows socket client 與 OEM 在設備端上的 server 同時開發
+  - client 的開發速度比 server 還快
+  - 我們先把 socket client 寫成 CLI 工具，提供給 OEM
+    - 讓 OEM 確認我們送出的 bytes 是否正確
+    - 讓 OEM 驗證自己的 server 行為
+    - QA 做整合測試時，有一套比 GUI 工具更透明的工具，確認是 client 還是 server
+      的問題
+  - 如何保證 client 的正確？透過單元測試
+
+** 使用 Dart 撰寫 CLI 工具
+
+  - 一定程度上比一些其他語言好寫
+  - Dart 在看到 Future 等非同步操作，會等到 Future 結束，才會結束整個程式
+  - 也就是：用 Dart 寫非同步 CLI，我們不用另外寫 message loop
+
+* Undo
+  
+** 為什麼要做 Undo？
+
+  - Mobile App 工程師通常比較不熟悉怎麼做 Undo
+  - Mobile App 比較沒有複雜的編輯功能，用戶也比較少用手機做複雜的編輯
+  - Desktop 就要注意如何避免用戶誤刪
+  - 辛苦編輯的資料不小心消失，是糟糕的體驗
+  - 避免誤刪的手段：
+    * 刪除前加上確認提示
+    * 製作垃圾桶或是 Undo 命令
+
+** 怎麼實做 Undo？
+
+  - 一般的作法是每次編輯之間要做 diff
+  - 編輯的時候存入與前一次之間的差異
+  - Undo 時就是取消這次的差異，並且把這個差異變成 redo
+  - 偷懶的作法：把前一個狀態整個存起來，直接回到前一個狀態
+
+* Flutter 上實做 Undo
+
+  - Flutter App 開發特別注重狀態管理（State Management）
+  - 常用 Pattern：Redux、Provider、BLoC，等等
+  - 把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget ree
+  - 在狀態改變的時候，儲存前一個狀態
+  - Undo 就是把前一個狀態拿回來變呈現在的狀態
+
+* Desktop 上的 GUI
+
+  - 鍵盤
+  - Scrollbar
+
+** Flutter 在 Windows 上的 Bug
+
+  - 左邊的 Shift 被當成 Capslock 了
+  - 打一個 email 會變成 zonble@GMAIL>COM
+  - Flutter 2.0 ~ 2.2 都沒有修正
+  - 可以在最上層另外包一個 Widget 改變按鍵行為
+  - [[https://github.com/flutter/flutter/issues/75675][相關討論與修正方式]]
+
+** Scroll Bar
+
+  - 手機上都是用滑動手勢捲動頁面，Scroll Bar 只是視覺提示
+  - 在桌面平台上，就常常會透過滑鼠拖動 Scroll Bar 捲動頁面
+  - 如果你的 Scroll View （包括 LisView 等）不是全頁的，Flutter 無法幫你把
+    Scroll View 與 Scroll Bar 關連起來
+  - 必須從外部對 Scroll View 與 Scroll Bar 指定相同的 ScrollController
+
+
+* Scroll Bar
+
+  Flutter 官方文件：
+
+  [https://api.flutter.dev/flutter/material/Scrollbar/controller.html]
+  
+  If nothing is passed to controller, the default behavior is to automatically
+  enable scrollbar dragging on the nearest ScrollController using
+  PrimaryScrollController.of.
+
+  意思是，只要不是 PrimaryScrollController，如果不指定 controller 就會有問題
+
+* Installer
+
+  - 你的 Flutter App 還是需要 Installer 才能讓用戶安裝
+  - Flutter SDK 中，並沒有跟 Installer 相關的部分
+  - 你還是要有 Installer 的 knowhow
+  - 公司說，我們沒錢買 Install Shield
+
+* 其他平台上的 Installer
+
+  - Android、iOS、Android
+    * 使用 Store 發行
+    * Store 可以決定哪些設備可以安裝（OS 版本、32/64bit）
+    * 所有相依套件打包在一起
+    * 系統幫你安排安裝到指定的 sandbox 中
+  - Linux
+    * 沒什麼機會寫，暫不討論
+
+* Windows 上的 Installer 
+
+** (1)
+  
+  - 用戶可以將 App 裝到任何位置
+  - 安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新
+  - 反安裝需要刪除 registry
+  - 要自己指定 Program Menu 與桌面上要建立哪些捷徑
+  - 需要自己設定安裝條件（作業系統版本等）
+  - 可以允許用戶安裝部分功能
+
+** (2)
+  
+  - 是裝給整台機器使用，還是只給單一用戶使用
+  - 相依套件可能要寫入系統目錄（C++ runtime、Web View 2）
+  - 安裝 Driver
+  - 裝完是否要重開機
+
+* WiX Toolset
+
+  - 使用 XML 表達安裝邏輯
+  - 可以產生兩類型的安裝程式
+    * MSI、MSU、MSP...
+      - 安裝主程式
+    * Bootstrapper
+      - 安裝 Dependency
+
+* MSI 要定義哪些東西？ (1)
+
+  - 要安裝的檔案
+    * Runner
+    * DLL for plug-ins
+    * Assets for the main bundle & plug-ins
+    * 桌面與開始工具列捷徑
+  - 檔案要裝到哪？
+    * Per machine 安裝，放在 C:\Program Files\ 下
+    * Per user 安裝，放在 %USER%\AppData\Roaming\ 下
+
+* MSI 要定義哪些東西？ (2)
+  - Registry 路徑
+    * Per machine 安裝，放在 HKLM
+    * Per user 安裝，放在 HKCU
+  - 安裝限制
+    * Flutter app 只能夠在 64 位元 Windows 執行
+  - 升級相關： Update 用的 GUID
+    
+  有些特殊檔案類型需要用 WiX Extension 處理
+
+  - [[https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html][difx]]: 安裝 Driver
+
+* Flutter App 會需要的 Dependencies
+
+  - Microsoft Visual C++ Redistributable for Visual Studio 2019
+    - [[https://support.microsoft.com/zh-tw/topic/%E6%9C%80%E6%96%B0%E6%94%AF%E6%8F%B4%E7%9A%84-visual-c-%E4%B8%8B%E8%BC%89-2647da03-1eea-4433-9aff-95f26a218cc0][下載]]
+    - 安裝 Visual Studio 的時候，硬碟裡頭也會放一份
+      -  C:\Program Files (x86)\Microsoft Visual Studio\2019\YourVersionHere\VC\Redist
+  - Universal CRT - [[https://support.microsoft.com/zh-tw/topic/windows-%E4%B8%AD%E9%80%9A%E7%94%A8-c-%E5%9F%B7%E8%A1%8C%E9%9A%8E%E6%AE%B5%E7%9A%84%E6%9B%B4%E6%96%B0-c0514201-7fe6-95a3-b0a5-287930f3560c][下載]]
+  - 我們往往搞不清楚用戶的電腦上缺哪些 runtime，在不同電腦上多測試
+
+* 開發給 Windows 使用的 Flutter Plug-in
+
+  - 方式
+    1. 透過 Dart 與 C 之間的 FFI
+    2. 透過 Method Channel/Event Channel
+  - 目前 Windows 上還不支援 Native View
+  
+* Dart FFI
+
+  - [[https://dart.dev/guides/libraries/c-interop][相關文件: C interop using dart:ffi]]
+  - 從 Dart 中直接透過語法 briding 呼叫 win32 C API
+  - 全部使用 Dart 語法開發
+  - 但其實不好寫：從 Dart 中對應 C 的 signature 比想像中麻煩
+  - 從 C callback 回 Dart 也不好搞
+  - 可以參考 [[https://pub.dev/packages/win32][win32 package]]
+  
+* Flutter Plug-in on Windows
+
+  - 從 Dart 呼叫 Windows API 時透過 method channel
+  - 從 Windows 呼叫 Dart 可以用 event channel 或 method channel
+  - 在 Windows 上使用 C++ 開發
+    * Flutter plug-in 是 C++ class
+    * 開發時 override 掉 template method
+  - 使用 CMake 工具建置編譯設定
+  - Dart 使用 UTF-8 編碼，Windows 使用 UTF-16 編碼，需要注意編碼轉換
+
+* 從 Windows 接收通知
+
+  - 其他平台的作法
+    * iOS/macOS: 對特定 API 接收 delegate 或 notification 的訊息，用 channel 送
+      回 Flutter
+    * Android： 對特定 API 接收 listener
+  - Windows
+    * 所有通知都在 winproc 中
+    * 可以想像成 iOS/macOS 的 runloop
+    * plug-in 可以交換 winproc 的指標，處理想要的通知後，交給之前的 winproc 處理
+    * [[https://zonble.medium.com/%E9%96%8B%E7%99%BC-flutter-windows-plug-in-f84dbb90aff9][我的筆記]]
+
+* .Net
+
+  - Flutter App 是用 C/C++ 寫成，需要手動管理記憶體
+  - 雖然可以對 Flutter plug-in 加上編譯成 .Bet dll，但執行時會因為違法存取記憶體
+    而 crash
+
+* 可以呼叫 .Net 的方式
+
+  - [[https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/clr-hosting-interfaces][CLR Hosting]]
+    * 使用限制太大
+    * 可以指定要呼叫的 .DLL
+    * 只能夠執行 C# 的 class method
+    * 只能夠回傳一個整數
+  - COM 或著其他 IPC
+    * 好像沒有必要把架構搞成這樣
+
+* 回到我們的專案
+
+  - 其實技術本身沒有想像中花時間
+  - 有更多時間花在內部溝通上
+  - 團隊分散台北、上海、成都、福州，需要很努力的協作
+  - 但都讓我們累積了寶貴的經驗
+
+* Recap
+
+  - 今天主要要講的
+    * 善用 CLI 工具
+    * 特別注意 Undo
+    * Desktop 專屬的 GUI
+    * Installer
+  - 順便會講的
+    * Windows 上的 plug-in 開發
+    * .Net
+* Thank You!
+
+
+* Notes
+  
+(setq `org-re-reveal-revealjs-version "3.6.0)
+#+BEGIN_COMMENT
+(use-package org-tree-slide)
+(progn
+  (set 'org-tree-slide-slide-in-effect nil)
+  (org-tree-slide-mode))
