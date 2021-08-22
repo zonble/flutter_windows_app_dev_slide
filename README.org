@@ -10,8 +10,9 @@
 
 * 前言
 
-  - Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
-  - 今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗
+- Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
+- 今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗
+- [[https://github.com/zonble/flutter_windows_app_dev_slide][Slide 網址]]
 
 * 關於我
 
@@ -30,15 +31,20 @@
 
 ** 我做過的東西
   
-    * Cerence Ark Assitant SDK for iOS and Flutter
-    * KKBOX Kids for iOS and Android
-    * KKBOX for macOS, iOS, watchOS, tvOS
-    * KKBOX iOS 開發基本教材
-    * Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
-      macOS 版
-    * 還有很多失敗作品
+ - Cerence Ark Assitant SDK for iOS and Flutter
+ - KKBOX Kids for iOS and Android
+ - KKBOX for macOS, iOS, watchOS, tvOS
+ - KKBOX iOS 開發基本教材
+ - Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
+   macOS 版
+ - 還有很多失敗作品
 
 * 背景
+#+REVEAL_HTML: <div style="float: right; width: 200px;">
+#+NAME: image:cerence
+[[./cerence.png]]
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div style="float: left; width: 70%;">
 
   - [[https://www.cerence.com/][Cerence (NASDAQ: CENC)]]
   - 以語音為核心技術的 AIoT 公司
@@ -47,10 +53,11 @@
 
   - 智慧電梯是一個語音盒子，後面控制電梯的系統
   - 這個盒子需要一套 PC 上的配置工具
-    * 更新韌體
     * 編輯樓層語音指令
+    * 更新韌體
     * 執行硬體測試
-  - 我們使用 Flutter 開發
+    * 我們使用 Flutter 開發
+#+REVEAL_HTML: </div>
 
 ** Demo
 
@@ -304,7 +311,7 @@
     * Flutter app 只能夠在 64 位元 Windows 執行
   - 升級相關： Update 用的 GUID
   - 有些特殊檔案類型需要用 WiX Extension 處理
-    - [[https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html][difx]]: 安裝 Driver
+    * [[https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html][difx]]: 安裝 Driver
 
 ** Flutter App 會需要的 Dependencies
 
@@ -322,7 +329,7 @@
     2. 透過 Method Channel/Event Channel
   - 目前 Windows 上還不支援 Native View
   
-* Dart FFI
+** Dart FFI
 
   - [[https://dart.dev/guides/libraries/c-interop][相關文件: C interop using dart:ffi]]
   - 從 Dart 中直接透過語法 briding 呼叫 win32 C API
@@ -331,7 +338,7 @@
   - 從 C callback 回 Dart 也不好搞
   - 可以參考 [[https://pub.dev/packages/win32][win32 package]]
   
-* Flutter Plug-in on Windows
+** Flutter Plug-in on Windows
 
   - 從 Dart 呼叫 Windows API 時透過 method channel
   - 從 Windows 呼叫 Dart 可以用 event channel 或 method channel
@@ -341,7 +348,7 @@
   - 使用 CMake 工具建置編譯設定
   - Dart 使用 UTF-8 編碼，Windows 使用 UTF-16 編碼，需要注意編碼轉換
 
-* 從 Windows 接收通知
+** 從 Windows 接收通知
 
   - 其他平台的作法
     * iOS/macOS: 對特定 API 接收 delegate 或 notification 的訊息，用 channel 送
@@ -359,7 +366,7 @@
   - 雖然可以對 Flutter plug-in 加上編譯成 .Bet dll，但執行時會因為違法存取記憶體
     而 crash
 
-* 可以呼叫 .Net 的方式
+** 可以呼叫 .Net 的方式
 
   - [[https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/clr-hosting-interfaces][CLR Hosting]]
     * 使用限制太大

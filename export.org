@@ -1,0 +1,15 @@
+#+TITLE: 怎樣匯出這份簡報？
+
+這份簡報使用 Emacs 的 Org-Mode 製作，如果想要使用這份簡報：
+
+** 匯出成 HTML簡報
+
+這份簡報可以匯出成使用 reveal.js 的 HTML 簡報格式。匯出方式如下：
+
+1. 安裝 [[https://github.com/emacsmirror/org-re-reveal][org-re-reveal]]
+2. 安裝完畢後，使用 M+X 輸入 load-library，然後載入 org-re-reveal
+3. 使用 C-C、C-X、V、V 指令輸出
+
+** 直接播放
+
+安裝 [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] ，即可播放
