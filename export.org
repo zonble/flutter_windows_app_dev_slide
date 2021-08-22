@@ -12,4 +12,4 @@
 
 ** 直接播放
 
-安裝 [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] ，即可播放
+安裝 [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] ，即可播放。

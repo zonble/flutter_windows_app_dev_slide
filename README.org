@@ -13,6 +13,7 @@
 - Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
 - 今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗
 - [[https://github.com/zonble/flutter_windows_app_dev_slide][Slide 網址]]
+- 我們開發的東西，算是 AIoT 相關吧…
 
 * 關於我
 
