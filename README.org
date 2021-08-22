@@ -5,8 +5,8 @@
 #+REVEAL_VERSION: 3.6.0
 #+REVEAL_ROOT: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0
 #+REVEAL_THEME: white
-#+OPTIONS: toc:nil
 #+REVEAL_INIT_OPTIONS: slideNumber:false
+#+OPTIONS: toc:nil, reveal_slide_number:nil
 
 * 前言
 
@@ -15,12 +15,18 @@
 
 * 關於我
 
+#+REVEAL_HTML: <div style="float: right; width: 200px;">
+#+NAME: image:zonble
+[[./zonble.jpeg]]
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div style="float: left; width: 70%;">
   - Flutter GDE (2019-)
   - 工作
     * 工作內容大抵上是 App 工程師
     * Engineer Manager @ Cerence Taipei (2020-)
     * iOS Developer Lead @ KKBOX (2011-2020)
     * 一家兩人接案公司 (2007-2011)
+#+REVEAL_HTML: </div>
 
 ** 我做過的東西
   
@@ -50,7 +56,7 @@
 
   #+REVEAL_HTML: <iframe width="800" height="500" src="https://www.youtube.com/embed/JpnwInksmgY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   
-* 為什麼用 Flutter？
+** 為什麼用 Flutter？
 
   - 客戶一開始想要 Windows + iOS 這套組合
   - 我們也不想要寫兩套 codebase
@@ -79,15 +85,17 @@
   - 其他各種 HTTP 連線與 server 傳遞資料
   - 用 Flutter GUI 編輯語音指令
 
-* App 的組成
+** App 的組成
 
   - Flutter Bloc 狀態與 GUI
-  - Cerence API client
-  - Cernece OTA API client
-  - 設備 socket 通訊 client
-  - Cerence 語音通訊協定 Flutter plugin
-  - Flutter WebView2 plugin
-  - Flutter USB notification plugin
+  - Packages
+    + Cerence API client
+    + Cernece OTA API client
+    + 設備 socket 通訊 client
+  - Plugins
+    + Cerence 語音通訊協定 Flutter plugin
+    + Flutter WebView2 plugin
+    + Flutter USB notification plugin
 
 * 從 Mobile 轉向 Desktop
 
@@ -127,7 +135,7 @@
     * 執行其他的 CLI 程式
     * 讀取 standard output 與 standard error 顯示
 
-* Process Class
+** Process Class
 
   - Dart 程式可以用 [[https://api.dart.dev/stable/2.13.4/dart-io/Process-class.html][Process]] 執行外部命令，呼叫方式
 
@@ -140,9 +148,9 @@
   - 可以用 [[https://api.flutter.dev/flutter/dart-io/Platform/resolvedExecutable.html][Platform.resolvedExecutable]] 取得目前 app 執行檔位置，找到跟著一起發行
     的執行檔
   
-* Dart 也可以開發 CLI 工具
+** Dart 也可以開發 CLI 工具
 
-** Compile Exe
+*** Compile Exe
   
   - 在撰寫一些跟 GUI 無關的 code 的時候，我們也可以把這部分變成 CLI 工具
   - 支援編譯出 Windows、macOS、Linux 的執行檔
@@ -155,7 +163,7 @@
 & dart compile exe my_cli_cmd.dart
 #+END_SRC
 
-** 我們的使用場景
+*** 我們的使用場景
 
   - Windows socket client 與 OEM 在設備端上的 server 同時開發
   - client 的開發速度比 server 還快
@@ -166,7 +174,7 @@
       的問題
   - 如何保證 client 的正確？透過單元測試
 
-** 使用 Dart 撰寫 CLI 工具
+*** 使用 Dart 撰寫 CLI 工具
 
   - 一定程度上比一些其他語言好寫
   - Dart 在看到 Future 等非同步操作，會等到 Future 結束，才會結束整個程式
@@ -191,7 +199,7 @@
   - Undo 時就是取消這次的差異，並且把這個差異變成 redo
   - 偷懶的作法：把前一個狀態整個存起來，直接回到前一個狀態
 
-* Flutter 上實做 Undo
+** Flutter 上實做 Undo
 
   - Flutter App 開發特別注重狀態管理（State Management）
   - 常用 Pattern：Redux、Provider、BLoC，等等
@@ -221,7 +229,7 @@
   - 必須從外部對 Scroll View 與 Scroll Bar 指定相同的 ScrollController
 
 
-* Scroll Bar
+** Scroll Bar
 
   Flutter 官方文件：
 
@@ -240,7 +248,7 @@
   - 你還是要有 Installer 的 knowhow
   - 公司說，我們沒錢買 Install Shield
 
-* 其他平台上的 Installer
+** 其他平台上的 Installer
 
   - Android、iOS、Android
     * 使用 Store 發行
@@ -250,9 +258,9 @@
   - Linux
     * 沒什麼機會寫，暫不討論
 
-* Windows 上的 Installer 
+** Windows 上的 Installer
 
-** (1)
+*** (1)
   
   - 用戶可以將 App 裝到任何位置
   - 安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新
@@ -261,14 +269,14 @@
   - 需要自己設定安裝條件（作業系統版本等）
   - 可以允許用戶安裝部分功能
 
-** (2)
+*** (2)
   
   - 是裝給整台機器使用，還是只給單一用戶使用
   - 相依套件可能要寫入系統目錄（C++ runtime、Web View 2）
   - 安裝 Driver
   - 裝完是否要重開機
 
-* WiX Toolset
+** WiX Toolset
 
   - 使用 XML 表達安裝邏輯
   - 可以產生兩類型的安裝程式
@@ -277,7 +285,7 @@
     * Bootstrapper
       - 安裝 Dependency
 
-* MSI 要定義哪些東西？ (1)
+** MSI 要定義哪些東西？ (1)
 
   - 要安裝的檔案
     * Runner
@@ -288,19 +296,17 @@
     * Per machine 安裝，放在 C:\Program Files\ 下
     * Per user 安裝，放在 %USER%\AppData\Roaming\ 下
 
-* MSI 要定義哪些東西？ (2)
+** MSI 要定義哪些東西？ (2)
   - Registry 路徑
     * Per machine 安裝，放在 HKLM
     * Per user 安裝，放在 HKCU
   - 安裝限制
     * Flutter app 只能夠在 64 位元 Windows 執行
   - 升級相關： Update 用的 GUID
-    
-  有些特殊檔案類型需要用 WiX Extension 處理
+  - 有些特殊檔案類型需要用 WiX Extension 處理
+    - [[https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html][difx]]: 安裝 Driver
 
-  - [[https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html][difx]]: 安裝 Driver
-
-* Flutter App 會需要的 Dependencies
+** Flutter App 會需要的 Dependencies
 
   - Microsoft Visual C++ Redistributable for Visual Studio 2019
     - [[https://support.microsoft.com/zh-tw/topic/%E6%9C%80%E6%96%B0%E6%94%AF%E6%8F%B4%E7%9A%84-visual-c-%E4%B8%8B%E8%BC%89-2647da03-1eea-4433-9aff-95f26a218cc0][下載]]
@@ -380,14 +386,17 @@
   - 順便會講的
     * Windows 上的 plug-in 開發
     * .Net
+
 * Thank You!
-
-
-* Notes
-  
-(setq `org-re-reveal-revealjs-version "3.6.0)
+ :PROPERTIES:
+   :UNNUMBERED: notoc
+   :END:
+ 
 #+BEGIN_COMMENT
 (use-package org-tree-slide)
 (progn
   (set 'org-tree-slide-slide-in-effect nil)
   (org-tree-slide-mode))
+
+(setq `org-re-reveal-revealjs-version "3.6.0)
+#+END_COMMENT

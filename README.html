@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8"/>
+<title>使用 Flutter 開發 Windows 應用</title>
+<meta name="author" content="Weizhong Yang a.k.a zonble"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/white.css" id="theme"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1 class="title">使用 Flutter 開發 Windows 應用</h1><h2 class="author">Weizhong Yang a.k.a zonble</h2><p class="date">Created: 2021-08-22 Sun 23:46</p>
+</section>
+
+<section>
+<section id="slide-1">
+<h2 id="1"><span class="section-number-2">1.</span> 前言</h2>
+<ul>
+<li>Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台</li>
+<li>今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2">
+<h2 id="2"><span class="section-number-2">2.</span> 關於我</h2>
+<div style="float: right; width: 200px;">
+
+<div id="org6008d63" class="figure">
+<p><img src="./zonble.jpeg" alt="zonble.jpeg" />
+</p>
+</div>
+</div>
+<div style="float: left; width: 70%;">
+<ul>
+<li>Flutter GDE (2019-)</li>
+<li>工作
+<ul>
+<li>工作內容大抵上是 App 工程師</li>
+<li>Engineer Manager @ Cerence Taipei (2020-)</li>
+<li>iOS Developer Lead @ KKBOX (2011-2020)</li>
+<li>一家兩人接案公司 (2007-2011)</li>
+
+</ul></li>
+
+</ul>
+</div>
+
+</section>
+<section id="slide-2-1">
+<h3 id="2-1"><span class="section-number-3">2.1.</span> 我做過的東西</h3>
+<ul>
+<li>Cerence Ark Assitant SDK for iOS and Flutter</li>
+<li>KKBOX Kids for iOS and Android</li>
+<li>KKBOX for macOS, iOS, watchOS, tvOS</li>
+<li>KKBOX iOS 開發基本教材</li>
+<li>Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
+macOS 版</li>
+<li>還有很多失敗作品</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-3">
+<h2 id="3"><span class="section-number-2">3.</span> 背景</h2>
+<ul>
+<li><a href="https://www.cerence.com/">Cerence (NASDAQ: CENC)</a></li>
+<li>以語音為核心技術的 AIoT 公司</li>
+<li>Cerence 最近半年積極開發語音智慧電梯</li>
+<li><a href="https://www.youtube.com/watch?v=JpnwInksmgY">Demo</a></li>
+
+<li>智慧電梯是一個語音盒子，後面控制電梯的系統</li>
+<li>這個盒子需要一套 PC 上的配置工具
+<ul>
+<li>更新韌體</li>
+<li>編輯樓層語音指令</li>
+<li>執行硬體測試</li>
+
+</ul></li>
+<li>我們使用 Flutter 開發</li>
+
+</ul>
+
+</section>
+<section id="slide-3-1">
+<h3 id="3-1"><span class="section-number-3">3.1.</span> Demo</h3>
+<iframe width="800" height="500" src="https://www.youtube.com/embed/JpnwInksmgY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+</section>
+<section id="slide-3-2">
+<h3 id="3-2"><span class="section-number-3">3.2.</span> 為什麼用 Flutter？</h3>
+<ul>
+<li>客戶一開始想要 Windows + iOS 這套組合</li>
+<li>我們也不想要寫兩套 codebase</li>
+<li>Designer 做了一整套 Material Design 的畫面</li>
+<li>我手上會的開發框架，只有 Flutter 可以符合這個需求</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-4">
+<h2 id="4"><span class="section-number-2">4.</span> 這個 App 做了哪些事？</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+</section>
+<section id="slide-4-1">
+<h3 id="4-1"><span class="section-number-3">4.1.</span> 簡單來說</h3>
+<ul>
+<li>登入</li>
+<li>察看設備訊息</li>
+<li>編輯樓層語音指令</li>
+<li>執行各項測試</li>
+<li>OTA 軟體更新</li>
+
+</ul>
+
+</section>
+<section id="slide-4-2">
+<h3 id="4-2"><span class="section-number-3">4.2.</span> 複雜來說</h3>
+<ul>
+<li>在本地端產生 privarte/public key，並且加密保存</li>
+<li>在本地端產生 x509 CSR 與匯入 Certificate</li>
+<li>使用 WebView 2 執行 Oauth authenticateion code flow 登入</li>
+<li>使用 mTLS 連線登入</li>
+<li>偵測 USB 連接狀態，判斷是否連接設備</li>
+<li>透過 ADB forwarding 與設備做 socket 通訊
+<ul>
+<li>包含檢測與 OTA</li>
+
+</ul></li>
+<li>其他各種 HTTP 連線與 server 傳遞資料</li>
+<li>用 Flutter GUI 編輯語音指令</li>
+
+</ul>
+
+</section>
+<section id="slide-4-3">
+<h3 id="4-3"><span class="section-number-3">4.3.</span> App 的組成</h3>
+<ul>
+<li>Flutter Bloc 狀態與 GUI</li>
+<li>Packages
+<ul>
+<li>Cerence API client</li>
+<li>Cernece OTA API client</li>
+<li>設備 socket 通訊 client</li>
+
+</ul></li>
+<li>Plugins
+<ul>
+<li>Cerence 語音通訊協定 Flutter plugin</li>
+<li>Flutter WebView2 plugin</li>
+<li>Flutter USB notification plugin</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-5">
+<h2 id="5"><span class="section-number-2">5.</span> 從 Mobile 轉向 Desktop</h2>
+<ul>
+<li>今天主要要講的
+<ul>
+<li>善用 CLI 工具</li>
+<li>特別注意 Undo</li>
+<li>Desktop 專屬的 GUI</li>
+<li>Installer</li>
+
+</ul></li>
+<li>順便會講的
+<ul>
+<li>Windows 上的 plug-in 開發</li>
+<li>.Net</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-6">
+<h2 id="6"><span class="section-number-2">6.</span> 在準備進入 Flutter 開發 Windows App 之前</h2>
+<ul>
+<li>只會 Dart/Flutter 可能不太夠</li>
+<li>應該還是很有可能碰到
+<ul>
+<li>CMake 語法</li>
+<li>C/C++ 語言</li>
+<li>C/C++ 編譯設定</li>
+<li>Nuget</li>
+<li>WiX 或其他 Installer 開發工具</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-7">
+<h2 id="7"><span class="section-number-2">7.</span> 善用 CLI 工具</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+</section>
+<section id="slide-7-1">
+<h3 id="7-1"><span class="section-number-3">7.1.</span> Mobile 上的習慣</h3>
+<ul>
+<li>我們習慣在 Mobile 上，用一個 app 做完所有事
+<ul>
+<li>iOS 最初連把部分 code 搬到其他 framework 都不行，只能 static link</li>
+<li>不能與其他 process 通訊，widget 只能夠透過共用檔案或 keychain 交換資訊</li>
+<li>App 之間可以透過 openURL: 通訊，但蘋果也大加限制</li>
+<li>Android 則可以讓 App 與 Service 通訊</li>
+<li>控制其他 app 則需要透過呼叫 activity 等方式</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-7-2">
+<h3 id="7-2"><span class="section-number-3">7.2.</span> Desktop 上的 System Call</h3>
+<ul>
+<li>Desktop 平台可以盡情呼叫 system call
+<ul>
+<li>執行其他的 CLI 程式</li>
+<li>讀取 standard output 與 standard error 顯示</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-7-3">
+<h3 id="7-3"><span class="section-number-3">7.3.</span> Process Class</h3>
+<ul>
+<li>Dart 程式可以用 <a href="https://api.dart.dev/stable/2.13.4/dart-io/Process-class.html">Process</a> 執行外部命令，呼叫方式</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-dart">  <span style="color: #51afef;">var</span> <span style="color: #dcaeea;">result</span> = <span style="color: #51afef;">await</span> <span style="color: #ECBE7B;">Process</span>.run(<span style="color: #98be65;">'ls'</span>, [<span style="color: #98be65;">'-l'</span>]);
+</pre>
+</div>
+
+<ul>
+<li>從 result 中可以讀取 stdout 與 std err</li>
+<li>在 Windows 上，往往需要設置 PATH 變數或知道命令絕對路徑才能執行</li>
+<li>可以用 <a href="https://api.flutter.dev/flutter/dart-io/Platform/resolvedExecutable.html">Platform.resolvedExecutable</a> 取得目前 app 執行檔位置，找到跟著一起發行
+的執行檔</li>
+
+</ul>
+
+</section>
+<section id="slide-7-4">
+<h3 id="7-4"><span class="section-number-3">7.4.</span> Dart 也可以開發 CLI 工具</h3>
+<div class="outline-text-3" id="text-7-4">
+</div>
+</section>
+<section id="slide-7-4-1">
+<h4 id="7-4-1"><span class="section-number-4">7.4.1.</span> Compile Exe</h4>
+<ul>
+<li>在撰寫一些跟 GUI 無關的 code 的時候，我們也可以把這部分變成 CLI 工具</li>
+<li>支援編譯出 Windows、macOS、Linux 的執行檔</li>
+<li>執行檔中包含一套 Dart runtime</li>
+<li>每個執行檔大約 5mb</li>
+<li>搭配 <a href="https://pub.dev/packages/args">args</a> 套件處理參數</li>
+<li>在開發桌面應用時，可以活用這個特性</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-shell">&amp; dart compile exe my_cli_cmd.dart
+</pre>
+</div>
+
+</section>
+<section id="slide-7-4-2">
+<h4 id="7-4-2"><span class="section-number-4">7.4.2.</span> 我們的使用場景</h4>
+<ul>
+<li>Windows socket client 與 OEM 在設備端上的 server 同時開發</li>
+<li>client 的開發速度比 server 還快</li>
+<li>我們先把 socket client 寫成 CLI 工具，提供給 OEM
+<ul>
+<li>讓 OEM 確認我們送出的 bytes 是否正確</li>
+<li>讓 OEM 驗證自己的 server 行為</li>
+<li>QA 做整合測試時，有一套比 GUI 工具更透明的工具，確認是 client 還是 server
+的問題</li>
+
+</ul></li>
+<li>如何保證 client 的正確？透過單元測試</li>
+
+</ul>
+
+</section>
+<section id="slide-7-4-3">
+<h4 id="7-4-3"><span class="section-number-4">7.4.3.</span> 使用 Dart 撰寫 CLI 工具</h4>
+<ul>
+<li>一定程度上比一些其他語言好寫</li>
+<li>Dart 在看到 Future 等非同步操作，會等到 Future 結束，才會結束整個程式</li>
+<li>也就是：用 Dart 寫非同步 CLI，我們不用另外寫 message loop</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-8">
+<h2 id="8"><span class="section-number-2">8.</span> Undo</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+</section>
+<section id="slide-8-1">
+<h3 id="8-1"><span class="section-number-3">8.1.</span> 為什麼要做 Undo？</h3>
+<ul>
+<li>Mobile App 工程師通常比較不熟悉怎麼做 Undo</li>
+<li>Mobile App 比較沒有複雜的編輯功能，用戶也比較少用手機做複雜的編輯</li>
+<li>Desktop 就要注意如何避免用戶誤刪</li>
+<li>辛苦編輯的資料不小心消失，是糟糕的體驗</li>
+<li>避免誤刪的手段：
+<ul>
+<li>刪除前加上確認提示</li>
+<li>製作垃圾桶或是 Undo 命令</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-8-2">
+<h3 id="8-2"><span class="section-number-3">8.2.</span> 怎麼實做 Undo？</h3>
+<ul>
+<li>一般的作法是每次編輯之間要做 diff</li>
+<li>編輯的時候存入與前一次之間的差異</li>
+<li>Undo 時就是取消這次的差異，並且把這個差異變成 redo</li>
+<li>偷懶的作法：把前一個狀態整個存起來，直接回到前一個狀態</li>
+
+</ul>
+
+</section>
+<section id="slide-8-3">
+<h3 id="8-3"><span class="section-number-3">8.3.</span> Flutter 上實做 Undo</h3>
+<ul>
+<li>Flutter App 開發特別注重狀態管理（State Management）</li>
+<li>常用 Pattern：Redux、Provider、BLoC，等等</li>
+<li>把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget ree</li>
+<li>在狀態改變的時候，儲存前一個狀態</li>
+<li>Undo 就是把前一個狀態拿回來變呈現在的狀態</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-9">
+<h2 id="9"><span class="section-number-2">9.</span> Desktop 上的 GUI</h2>
+<ul>
+<li>鍵盤</li>
+<li>Scrollbar</li>
+
+</ul>
+
+</section>
+<section id="slide-9-1">
+<h3 id="9-1"><span class="section-number-3">9.1.</span> Flutter 在 Windows 上的 Bug</h3>
+<ul>
+<li>左邊的 Shift 被當成 Capslock 了</li>
+<li>打一個 email 會變成 zonble@GMAIL&gt;COM</li>
+<li>Flutter 2.0 ~ 2.2 都沒有修正</li>
+<li>可以在最上層另外包一個 Widget 改變按鍵行為</li>
+<li><a href="https://github.com/flutter/flutter/issues/75675">相關討論與修正方式</a></li>
+
+</ul>
+
+</section>
+<section id="slide-9-2">
+<h3 id="9-2"><span class="section-number-3">9.2.</span> Scroll Bar</h3>
+<ul>
+<li>手機上都是用滑動手勢捲動頁面，Scroll Bar 只是視覺提示</li>
+<li>在桌面平台上，就常常會透過滑鼠拖動 Scroll Bar 捲動頁面</li>
+<li>如果你的 Scroll View （包括 LisView 等）不是全頁的，Flutter 無法幫你把
+Scroll View 與 Scroll Bar 關連起來</li>
+<li>必須從外部對 Scroll View 與 Scroll Bar 指定相同的 ScrollController</li>
+
+</ul>
+
+
+</section>
+<section id="slide-9-3">
+<h3 id="9-3"><span class="section-number-3">9.3.</span> Scroll Bar</h3>
+<p>
+Flutter 官方文件：
+</p>
+
+<p>
+[<a href="https://api.flutter.dev/flutter/material/Scrollbar/controller.html">https://api.flutter.dev/flutter/material/Scrollbar/controller.html</a>]
+</p>
+
+<p>
+If nothing is passed to controller, the default behavior is to automatically
+enable scrollbar dragging on the nearest ScrollController using
+PrimaryScrollController.of.
+</p>
+
+<p>
+意思是，只要不是 PrimaryScrollController，如果不指定 controller 就會有問題
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-10">
+<h2 id="10"><span class="section-number-2">10.</span> Installer</h2>
+<ul>
+<li>你的 Flutter App 還是需要 Installer 才能讓用戶安裝</li>
+<li>Flutter SDK 中，並沒有跟 Installer 相關的部分</li>
+<li>你還是要有 Installer 的 knowhow</li>
+<li>公司說，我們沒錢買 Install Shield</li>
+
+</ul>
+
+</section>
+<section id="slide-10-1">
+<h3 id="10-1"><span class="section-number-3">10.1.</span> 其他平台上的 Installer</h3>
+<ul>
+<li>Android、iOS、Android
+<ul>
+<li>使用 Store 發行</li>
+<li>Store 可以決定哪些設備可以安裝（OS 版本、32/64bit）</li>
+<li>所有相依套件打包在一起</li>
+<li>系統幫你安排安裝到指定的 sandbox 中</li>
+
+</ul></li>
+<li>Linux
+<ul>
+<li>沒什麼機會寫，暫不討論</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-10-2">
+<h3 id="10-2"><span class="section-number-3">10.2.</span> Windows 上的 Installer</h3>
+<div class="outline-text-3" id="text-10-2">
+</div>
+</section>
+<section id="slide-10-2-1">
+<h4 id="10-2-1"><span class="section-number-4">10.2.1.</span> (1)</h4>
+<ul>
+<li>用戶可以將 App 裝到任何位置</li>
+<li>安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新</li>
+<li>反安裝需要刪除 registry</li>
+<li>要自己指定 Program Menu 與桌面上要建立哪些捷徑</li>
+<li>需要自己設定安裝條件（作業系統版本等）</li>
+<li>可以允許用戶安裝部分功能</li>
+
+</ul>
+
+</section>
+<section id="slide-10-2-2">
+<h4 id="10-2-2"><span class="section-number-4">10.2.2.</span> (2)</h4>
+<ul>
+<li>是裝給整台機器使用，還是只給單一用戶使用</li>
+<li>相依套件可能要寫入系統目錄（C++ runtime、Web View 2）</li>
+<li>安裝 Driver</li>
+<li>裝完是否要重開機</li>
+
+</ul>
+
+</section>
+<section id="slide-10-3">
+<h3 id="10-3"><span class="section-number-3">10.3.</span> WiX Toolset</h3>
+<ul>
+<li>使用 XML 表達安裝邏輯</li>
+<li>可以產生兩類型的安裝程式
+<ul>
+<li>MSI、MSU、MSP&#x2026;
+<ul>
+<li>安裝主程式</li>
+
+</ul></li>
+<li>Bootstrapper
+<ul>
+<li>安裝 Dependency</li>
+
+</ul></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-10-4">
+<h3 id="10-4"><span class="section-number-3">10.4.</span> MSI 要定義哪些東西？ (1)</h3>
+<ul>
+<li>要安裝的檔案
+<ul>
+<li>Runner</li>
+<li>DLL for plug-ins</li>
+<li>Assets for the main bundle &amp; plug-ins</li>
+<li>桌面與開始工具列捷徑</li>
+
+</ul></li>
+<li>檔案要裝到哪？
+<ul>
+<li>Per machine 安裝，放在 C:\Program Files\ 下</li>
+<li>Per user 安裝，放在 %USER%\AppData\Roaming\ 下</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-10-5">
+<h3 id="10-5"><span class="section-number-3">10.5.</span> MSI 要定義哪些東西？ (2)</h3>
+<ul>
+<li>Registry 路徑
+<ul>
+<li>Per machine 安裝，放在 HKLM</li>
+<li>Per user 安裝，放在 HKCU</li>
+
+</ul></li>
+<li>安裝限制
+<ul>
+<li>Flutter app 只能夠在 64 位元 Windows 執行</li>
+
+</ul></li>
+<li>升級相關： Update 用的 GUID</li>
+<li>有些特殊檔案類型需要用 WiX Extension 處理
+<ul>
+<li><a href="https://wixtoolset.org/documentation/manual/v3/xsd/difxapp/driver.html">difx</a>: 安裝 Driver</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-10-6">
+<h3 id="10-6"><span class="section-number-3">10.6.</span> Flutter App 會需要的 Dependencies</h3>
+<ul>
+<li>Microsoft Visual C++ Redistributable for Visual Studio 2019
+<ul>
+<li><a href="https://support.microsoft.com/zh-tw/topic/%E6%9C%80%E6%96%B0%E6%94%AF%E6%8F%B4%E7%9A%84-visual-c-%E4%B8%8B%E8%BC%89-2647da03-1eea-4433-9aff-95f26a218cc0">下載</a></li>
+<li>安裝 Visual Studio 的時候，硬碟裡頭也會放一份
+<ul>
+<li>C:\Program Files (x86)\Microsoft Visual Studio\2019\YourVersionHere\VC\Redist</li>
+
+</ul></li>
+
+</ul></li>
+<li>Universal CRT - <a href="https://support.microsoft.com/zh-tw/topic/windows-%E4%B8%AD%E9%80%9A%E7%94%A8-c-%E5%9F%B7%E8%A1%8C%E9%9A%8E%E6%AE%B5%E7%9A%84%E6%9B%B4%E6%96%B0-c0514201-7fe6-95a3-b0a5-287930f3560c">下載</a></li>
+<li>我們往往搞不清楚用戶的電腦上缺哪些 runtime，在不同電腦上多測試</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-11">
+<h2 id="11"><span class="section-number-2">11.</span> 開發給 Windows 使用的 Flutter Plug-in</h2>
+<ul>
+<li>方式
+<ol>
+<li>透過 Dart 與 C 之間的 FFI</li>
+<li>透過 Method Channel/Event Channel</li>
+
+</ol></li>
+<li>目前 Windows 上還不支援 Native View</li>
+
+</ul>
+
+</section>
+<section id="slide-11-1">
+<h3 id="11-1"><span class="section-number-3">11.1.</span> Dart FFI</h3>
+<ul>
+<li><a href="https://dart.dev/guides/libraries/c-interop">相關文件: C interop using dart:ffi</a></li>
+<li>從 Dart 中直接透過語法 briding 呼叫 win32 C API</li>
+<li>全部使用 Dart 語法開發</li>
+<li>但其實不好寫：從 Dart 中對應 C 的 signature 比想像中麻煩</li>
+<li>從 C callback 回 Dart 也不好搞</li>
+<li>可以參考 <a href="https://pub.dev/packages/win32">win32 package</a></li>
+
+</ul>
+
+</section>
+<section id="slide-11-2">
+<h3 id="11-2"><span class="section-number-3">11.2.</span> Flutter Plug-in on Windows</h3>
+<ul>
+<li>從 Dart 呼叫 Windows API 時透過 method channel</li>
+<li>從 Windows 呼叫 Dart 可以用 event channel 或 method channel</li>
+<li>在 Windows 上使用 C++ 開發
+<ul>
+<li>Flutter plug-in 是 C++ class</li>
+<li>開發時 override 掉 template method</li>
+
+</ul></li>
+<li>使用 CMake 工具建置編譯設定</li>
+<li>Dart 使用 UTF-8 編碼，Windows 使用 UTF-16 編碼，需要注意編碼轉換</li>
+
+</ul>
+
+</section>
+<section id="slide-11-3">
+<h3 id="11-3"><span class="section-number-3">11.3.</span> 從 Windows 接收通知</h3>
+<ul>
+<li>其他平台的作法
+<ul>
+<li>iOS/macOS: 對特定 API 接收 delegate 或 notification 的訊息，用 channel 送
+回 Flutter</li>
+<li>Android： 對特定 API 接收 listener</li>
+
+</ul></li>
+<li>Windows
+<ul>
+<li>所有通知都在 winproc 中</li>
+<li>可以想像成 iOS/macOS 的 runloop</li>
+<li>plug-in 可以交換 winproc 的指標，處理想要的通知後，交給之前的 winproc 處理</li>
+<li><a href="https://zonble.medium.com/%E9%96%8B%E7%99%BC-flutter-windows-plug-in-f84dbb90aff9">我的筆記</a></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-12">
+<h2 id="12"><span class="section-number-2">12.</span> .Net</h2>
+<ul>
+<li>盡量不要使用</li>
+<li>Flutter App 是用 C/C++ 寫成，需要手動管理記憶體</li>
+<li>雖然可以對 Flutter plug-in 加上編譯成 .Bet dll，但執行時會因為違法存取記憶體
+而 crash</li>
+
+</ul>
+
+</section>
+<section id="slide-12-1">
+<h3 id="12-1"><span class="section-number-3">12.1.</span> 可以呼叫 .Net 的方式</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/clr-hosting-interfaces">CLR Hosting</a>
+<ul>
+<li>使用限制太大</li>
+<li>可以指定要呼叫的 .DLL</li>
+<li>只能夠執行 C# 的 class method</li>
+<li>只能夠回傳一個整數</li>
+
+</ul></li>
+<li>COM 或著其他 IPC
+<ul>
+<li>好像沒有必要把架構搞成這樣</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-13">
+<h2 id="13"><span class="section-number-2">13.</span> 回到我們的專案</h2>
+<ul>
+<li>其實技術本身沒有想像中花時間</li>
+<li>有更多時間花在內部溝通上</li>
+<li>團隊分散台北、上海、成都、福州，需要很努力的協作</li>
+<li>但都讓我們累積了寶貴的經驗</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-14">
+<h2 id="14"><span class="section-number-2">14.</span> Recap</h2>
+<ul>
+<li>今天主要要講的
+<ul>
+<li>善用 CLI 工具</li>
+<li>特別注意 Undo</li>
+<li>Desktop 專屬的 GUI</li>
+<li>Installer</li>
+
+</ul></li>
+<li>順便會講的
+<ul>
+<li>Windows 上的 plug-in 開發</li>
+<li>.Net</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgff49b10">
+<h2 id="orgff49b10">Thank You!</h2>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: false,
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'convex', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>
