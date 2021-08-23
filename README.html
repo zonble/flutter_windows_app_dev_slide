@@ -27,7 +27,7 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">使用 Flutter 開發 Windows 應用</h1><h2 class="author">Weizhong Yang a.k.a zonble</h2><p class="date">Created: 2021-08-23 Mon 09:47</p>
+<h1 class="title">使用 Flutter 開發 Windows 應用</h1><h2 class="author">Weizhong Yang a.k.a zonble</h2><p class="date">Created: 2021-08-23 Mon 09:56</p>
 </section>
 
 <section>
@@ -48,7 +48,7 @@
 <h2 id="2"><span class="section-number-2">2.</span> 關於我</h2>
 <div style="float: right; width: 200px;">
 
-<div id="org50256a4" class="figure">
+<div id="org47b62e3" class="figure">
 <p><img src="./zonble.jpeg" alt="zonble.jpeg" />
 </p>
 </div>
@@ -89,7 +89,7 @@ macOS 版</li>
 <h2 id="3"><span class="section-number-2">3.</span> 背景</h2>
 <div style="float: right; width: 200px;">
 
-<div id="orgbd99476" class="figure">
+<div id="org5ec52c7" class="figure">
 <p><img src="./cerence.png" alt="cerence.png" />
 </p>
 </div>
@@ -101,7 +101,7 @@ macOS 版</li>
 <li>以語音為核心技術的 AIoT 公司</li>
 <li>今年積極開發語音智慧電梯</li>
 <li>智慧電梯是一個語音盒子，後面控制電梯的系統</li>
-<li>這個盒子需要一套 PC 上的配置工具</li>
+<li>這個盒子需要一套 PC 配置工具</li>
 <li>我們使用 Flutter 開發</li>
 
 </ul>
@@ -187,18 +187,22 @@ macOS 版</li>
 </section>
 <section>
 <section id="slide-5">
-<h2 id="5"><span class="section-number-2">5.</span> 從 Mobile 轉向 Desktop</h2>
+<h2 id="5"><span class="section-number-2">5.</span> 從 Mobile 到 Desktop</h2>
+<p>
+今天會講到
+</p>
+
 <ul>
-<li>今天主要要講的
+<li>Desktop App 的通則
 <ul>
 <li>善用 CLI 工具</li>
 <li>特別注意 Undo</li>
 <li>Desktop 專屬的 GUI</li>
-<li>Installer</li>
 
 </ul></li>
-<li>順便會講的
+<li>Windows 限定
 <ul>
+<li>Installer</li>
 <li>Windows 上的 plug-in 開發</li>
 <li>.Net</li>
 
@@ -444,6 +448,10 @@ PrimaryScrollController.of.
 <section>
 <section id="slide-10">
 <h2 id="10"><span class="section-number-2">10.</span> Installer</h2>
+<p>
+其實這可以是另外一個題目了
+</p>
+
 <ul>
 <li>你的 Flutter App 還是需要 Installer 才能讓用戶安裝</li>
 <li>Flutter SDK 中，並沒有跟 Installer 相關的部分</li>
@@ -482,9 +490,9 @@ PrimaryScrollController.of.
 <h4 id="10-2-1"><span class="section-number-4">10.2.1.</span> Windows Installer 需要做的事 (1)</h4>
 <ul>
 <li>用戶可以將 App 裝到任何位置</li>
-<li>安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新</li>
+<li>需要將安裝位置寫入 registry，日後才知道要去哪裡反安裝與更新</li>
 <li>反安裝需要刪除 registry</li>
-<li>要自己指定 Program Menu 與桌面上要建立哪些捷徑</li>
+<li>指定 Program Menu 與桌面上要建立哪些捷徑</li>
 <li>需要自己設定安裝條件（作業系統版本等）</li>
 <li>可以允許用戶安裝部分功能</li>
 
@@ -726,8 +734,8 @@ PrimaryScrollController.of.
 </section>
 </section>
 <section>
-<section id="slide-orgec5553f">
-<h2 id="orgec5553f">Thank You!</h2>
+<section id="slide-org73b52e2">
+<h2 id="org73b52e2">Thank You!</h2>
 </section>
 </section>
 </div>

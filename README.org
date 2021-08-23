@@ -51,7 +51,7 @@
   - 以語音為核心技術的 AIoT 公司
   - 今年積極開發語音智慧電梯
   - 智慧電梯是一個語音盒子，後面控制電梯的系統
-  - 這個盒子需要一套 PC 上的配置工具
+  - 這個盒子需要一套 PC 配置工具
   - 我們使用 Flutter 開發
 #+REVEAL_HTML: </div>
 
@@ -100,14 +100,16 @@
     + Flutter WebView2 plugin
     + Flutter USB notification plugin
 
-* 從 Mobile 轉向 Desktop
+* 從 Mobile 到 Desktop
 
-  - 今天主要要講的
+ 今天會講到
+
+  - Desktop App 的通則
     * 善用 CLI 工具
     * 特別注意 Undo
     * Desktop 專屬的 GUI
+  - Windows 限定
     * Installer
-  - 順便會講的
     * Windows 上的 plug-in 開發
     * .Net
 
@@ -266,9 +268,9 @@
 *** Windows Installer 需要做的事 (1)
   
   - 用戶可以將 App 裝到任何位置
-  - 安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新
+  - 需要將安裝位置寫入 registry，日後才知道要去哪裡反安裝與更新
   - 反安裝需要刪除 registry
-  - 要自己指定 Program Menu 與桌面上要建立哪些捷徑
+  - 指定 Program Menu 與桌面上要建立哪些捷徑
   - 需要自己設定安裝條件（作業系統版本等）
   - 可以允許用戶安裝部分功能
 
