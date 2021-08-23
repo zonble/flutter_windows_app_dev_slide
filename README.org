@@ -49,15 +49,10 @@
 
   - [[https://www.cerence.com/][Cerence (NASDAQ: CENC)]]
   - 以語音為核心技術的 AIoT 公司
-  - Cerence 最近半年積極開發語音智慧電梯
-  - [[https://www.youtube.com/watch?v=JpnwInksmgY][Demo]]
-
+  - 今年積極開發語音智慧電梯
   - 智慧電梯是一個語音盒子，後面控制電梯的系統
   - 這個盒子需要一套 PC 上的配置工具
-    * 編輯樓層語音指令
-    * 更新韌體
-    * 執行硬體測試
-    * 我們使用 Flutter 開發
+  - 我們使用 Flutter 開發
 #+REVEAL_HTML: </div>
 
 ** Demo
@@ -268,7 +263,7 @@
 
 ** Windows 上的 Installer
 
-*** (1)
+*** Windows Installer 需要做的事 (1)
   
   - 用戶可以將 App 裝到任何位置
   - 安裝位置需要寫入 registry，日後才知道要去哪裡反安裝與更新
@@ -277,7 +272,7 @@
   - 需要自己設定安裝條件（作業系統版本等）
   - 可以允許用戶安裝部分功能
 
-*** (2)
+*** Windows Installer 需要做的事 (2)
   
   - 是裝給整台機器使用，還是只給單一用戶使用
   - 相依套件可能要寫入系統目錄（C++ runtime、Web View 2）
