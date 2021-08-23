@@ -383,12 +383,12 @@
 
 * Recap
 
-  - 今天主要要講的
+  - Desktop App 的通則
     * 善用 CLI 工具
     * 特別注意 Undo
     * Desktop 專屬的 GUI
+  - Windows 限定
     * Installer
-  - 順便會講的
     * Windows 上的 plug-in 開發
     * .Net
 
