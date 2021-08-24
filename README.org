@@ -78,9 +78,9 @@
 
 ** 複雜來說
 
-  - 在本地端產生 privarte/public key，並且加密保存
+  - 在本地端產生 private/public key，並且加密保存
   - 在本地端產生 x509 CSR 與匯入 Certificate
-  - 使用 WebView 2 執行 Oauth authenticateion code flow 登入
+  - 使用 WebView 2 執行 Oauth authentication code flow 登入
   - 使用 mTLS 連線登入
   - 偵測 USB 連接狀態，判斷是否連接設備
   - 透過 ADB forwarding 與設備做 socket 通訊
@@ -229,7 +229,7 @@
 
   - 手機上都是用滑動手勢捲動頁面，Scroll Bar 只是視覺提示
   - 在桌面平台上，就常常會透過滑鼠拖動 Scroll Bar 捲動頁面
-  - 如果你的 Scroll View （包括 LisView 等）不是全頁的，Flutter 無法幫你把
+  - 如果你的 Scroll View （包括 ListView 等）不是全頁的，Flutter 無法幫你把
     Scroll View 與 Scroll Bar 關連起來
   - 必須從外部對 Scroll View 與 Scroll Bar 指定相同的 ScrollController
 
