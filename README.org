@@ -47,7 +47,7 @@
 #+REVEAL_HTML: </div>
 #+REVEAL_HTML: <div style="float: left; width: 70%;">
 
-  - [[https://www.cerence.com/][Cerence (NASDAQ: CENC)]]
+  - [[https://www.cerence.com/][Cerence (NASDAQ: CRNC)]]
   - 以語音為核心技術的 AIoT 公司
   - 今年積極開發語音智慧電梯
   - 智慧電梯是一個語音盒子，後面控制電梯的系統
