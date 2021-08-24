@@ -10,7 +10,7 @@
 
 * 前言
 
-- Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
+- [[https://flutter.dev/][Flutter]] 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台
 - 今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗
 - [[https://github.com/zonble/flutter_windows_app_dev_slide][Slide 網址]]
 - 我們開發的東西，算是 AIoT 相關吧…
@@ -22,7 +22,7 @@
 [[./zonble.jpeg]]
 #+REVEAL_HTML: </div>
 #+REVEAL_HTML: <div style="float: left; width: 70%;">
-  - Flutter GDE (2019-)
+  - [[https://developers.google.com/community/experts/directory/profile/profile-weizhong-yang][Flutter GDE]] (2019-)
   - 工作
     * 工作內容大抵上是 App 工程師
     * Engineer Manager @ Cerence Taipei (2020-)
@@ -32,10 +32,10 @@
 
 ** 我做過的東西
   
- - Cerence Ark Assitant SDK for iOS and Flutter
- - KKBOX Kids for iOS and Android
- - KKBOX for macOS, iOS, watchOS, tvOS
- - KKBOX iOS 開發基本教材
+ - [[https://www.cerence.com/cerence-products/cerence-ark][Cerence Ark Assitant]] SDK for iOS and Flutter
+ - [[https://www.kkbox.com/service/kkboxkids/][KKBOX Kids]] for iOS and Android
+ - [[https://apps.apple.com/tw/app/kkbox-%E9%9F%B3%E6%A8%82%E7%84%A1%E9%99%90%E8%81%BD-lets-music/id1105332179?mt=12][KKBOX for macOS]], [[https://apps.apple.com/tw/app/kkbox-%E9%9F%B3%E6%A8%82-podcast/id300915900][iOS, watchOS, tvOS]]
+ - [[https://zonble.gitbooks.io/kkbox-ios-dev/content/][KKBOX iOS 開發基本教材]]
  - Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
    macOS 版
  - 還有很多失敗作品
@@ -79,8 +79,8 @@
 ** 複雜來說
 
   - 在本地端產生 private/public key，並且加密保存
-  - 在本地端產生 x509 CSR 與匯入 Certificate
-  - 使用 WebView 2 執行 Oauth authentication code flow 登入
+  - 在本地端產生 [[https://en.wikipedia.org/wiki/X.509][X.509]] CSR 與匯入 Certificate
+  - 使用 [[https://developer.microsoft.com/en-us/microsoft-edge/webview2/][WebView2]] 執行 Oauth authentication code flow 登入
   - 使用 mTLS 連線登入
   - 偵測 USB 連接狀態，判斷是否連接設備
   - 透過 ADB forwarding 與設備做 socket 通訊
@@ -207,8 +207,8 @@
 ** Flutter 上實做 Undo
 
   - Flutter App 開發特別注重狀態管理（State Management）
-  - 常用 Pattern：Redux、Provider、BLoC，等等
-  - 把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget ree
+  - 常用 Pattern：[[https://pub.dev/packages/flutter_redux][Redux]]、[[https://pub.dev/packages/provider][Provider]]、[[https://bloclibrary.dev/][BLoC]]，等等
+  - 把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget tree
   - 在狀態改變的時候，儲存前一個狀態
   - Undo 就是把前一個狀態拿回來變呈現在的狀態
 

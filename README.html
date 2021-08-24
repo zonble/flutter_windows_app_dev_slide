@@ -27,14 +27,14 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">使用 Flutter 開發 Windows 應用</h1><h2 class="author">Weizhong Yang a.k.a zonble</h2><p class="date">Created: 2021-08-24 Tue 14:45</p>
+<h1 class="title">使用 Flutter 開發 Windows 應用</h1><h2 class="author">Weizhong Yang a.k.a zonble</h2><p class="date">Created: 2021-08-25 Wed 02:13</p>
 </section>
 
 <section>
 <section id="slide-1">
 <h2 id="1"><span class="section-number-2">1.</span> 前言</h2>
 <ul>
-<li>Flutter 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台</li>
+<li><a href="https://flutter.dev/">Flutter</a> 目前除了行動平台，也支援 Windows、macOS、Linux 等桌面平台</li>
 <li>今天就來講講我們實際使用 Flutter 開發 Windows 應用的親身經驗</li>
 <li><a href="https://github.com/zonble/flutter_windows_app_dev_slide">Slide 網址</a></li>
 <li>我們開發的東西，算是 AIoT 相關吧…</li>
@@ -48,14 +48,14 @@
 <h2 id="2"><span class="section-number-2">2.</span> 關於我</h2>
 <div style="float: right; width: 200px;">
 
-<div id="org1a39e73" class="figure">
+<div id="org0fe83cf" class="figure">
 <p><img src="./zonble.jpeg" alt="zonble.jpeg" />
 </p>
 </div>
 </div>
 <div style="float: left; width: 70%;">
 <ul>
-<li>Flutter GDE (2019-)</li>
+<li><a href="https://developers.google.com/community/experts/directory/profile/profile-weizhong-yang">Flutter GDE</a> (2019-)</li>
 <li>工作
 <ul>
 <li>工作內容大抵上是 App 工程師</li>
@@ -72,10 +72,10 @@
 <section id="slide-2-1">
 <h3 id="2-1"><span class="section-number-3">2.1.</span> 我做過的東西</h3>
 <ul>
-<li>Cerence Ark Assitant SDK for iOS and Flutter</li>
-<li>KKBOX Kids for iOS and Android</li>
-<li>KKBOX for macOS, iOS, watchOS, tvOS</li>
-<li>KKBOX iOS 開發基本教材</li>
+<li><a href="https://www.cerence.com/cerence-products/cerence-ark">Cerence Ark Assitant</a> SDK for iOS and Flutter</li>
+<li><a href="https://www.kkbox.com/service/kkboxkids/">KKBOX Kids</a> for iOS and Android</li>
+<li><a href="https://apps.apple.com/tw/app/kkbox-%E9%9F%B3%E6%A8%82%E7%84%A1%E9%99%90%E8%81%BD-lets-music/id1105332179?mt=12">KKBOX for macOS</a>, <a href="https://apps.apple.com/tw/app/kkbox-%E9%9F%B3%E6%A8%82-podcast/id300915900">iOS, watchOS, tvOS</a></li>
+<li><a href="https://zonble.gitbooks.io/kkbox-ios-dev/content/">KKBOX iOS 開發基本教材</a></li>
 <li>Yahoo 輸入法 for Windows and macOS、嘸蝦米輸入法 macOS、教育部台語輸入法
 macOS 版</li>
 <li>還有很多失敗作品</li>
@@ -89,7 +89,7 @@ macOS 版</li>
 <h2 id="3"><span class="section-number-2">3.</span> 背景</h2>
 <div style="float: right; width: 200px;">
 
-<div id="orge539613" class="figure">
+<div id="org2d5555c" class="figure">
 <p><img src="./cerence.png" alt="cerence.png" />
 </p>
 </div>
@@ -147,8 +147,8 @@ macOS 版</li>
 <h3 id="4-2"><span class="section-number-3">4.2.</span> 複雜來說</h3>
 <ul>
 <li>在本地端產生 private/public key，並且加密保存</li>
-<li>在本地端產生 x509 CSR 與匯入 Certificate</li>
-<li>使用 WebView 2 執行 Oauth authenticatIon code flow 登入</li>
+<li>在本地端產生 <a href="https://en.wikipedia.org/wiki/X.509">X.509</a> CSR 與匯入 Certificate</li>
+<li>使用 <a href="https://developer.microsoft.com/en-us/microsoft-edge/webview2/">WebView2</a> 執行 Oauth authentication code flow 登入</li>
 <li>使用 mTLS 連線登入</li>
 <li>偵測 USB 連接狀態，判斷是否連接設備</li>
 <li>透過 ADB forwarding 與設備做 socket 通訊
@@ -344,8 +344,10 @@ macOS 版</li>
 <section>
 <section id="slide-8">
 <h2 id="8"><span class="section-number-2">8.</span> Undo</h2>
-<div class="outline-text-2" id="text-8">
-</div>
+<p>
+Mobile 不常做，但在 Desktop 很重要
+</p>
+
 </section>
 <section id="slide-8-1">
 <h3 id="8-1"><span class="section-number-3">8.1.</span> 為什麼要做 Undo？</h3>
@@ -379,8 +381,8 @@ macOS 版</li>
 <h3 id="8-3"><span class="section-number-3">8.3.</span> Flutter 上實做 Undo</h3>
 <ul>
 <li>Flutter App 開發特別注重狀態管理（State Management）</li>
-<li>常用 Pattern：Redux、Provider、BLoC，等等</li>
-<li>把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget ree</li>
+<li>常用 Pattern：<a href="https://pub.dev/packages/flutter_redux">Redux</a>、<a href="https://pub.dev/packages/provider">Provider</a>、<a href="https://bloclibrary.dev/">BLoC</a>，等等</li>
+<li>把狀態放在 Widget Tree 上層，下層監聽上層狀態改變，重建 widget tree</li>
 <li>在狀態改變的時候，儲存前一個狀態</li>
 <li>Undo 就是把前一個狀態拿回來變呈現在的狀態</li>
 
@@ -730,8 +732,8 @@ PrimaryScrollController.of.
 </section>
 </section>
 <section>
-<section id="slide-orgfb696c7">
-<h2 id="orgfb696c7">Thank You!</h2>
+<section id="slide-org914dfbe">
+<h2 id="org914dfbe">Thank You!</h2>
 </section>
 </section>
 </div>
