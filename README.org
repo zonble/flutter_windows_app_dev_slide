@@ -22,6 +22,7 @@
 [[./zonble.jpeg]]
 #+REVEAL_HTML: </div>
 #+REVEAL_HTML: <div style="float: left; width: 70%;">
+  - Twitter [[https://twitter.com/zonble][@zonble]]
   - [[https://developers.google.com/community/experts/directory/profile/profile-weizhong-yang][Flutter GDE]] (2019-)
   - 工作
     * 工作內容大抵上是 App 工程師
@@ -186,6 +187,8 @@
   - 也就是：用 Dart 寫非同步 CLI，我們不用另外寫 message loop
 
 * Undo
+
+Mobile 不常做，但在 Desktop 很重要
   
 ** 為什麼要做 Undo？
 
